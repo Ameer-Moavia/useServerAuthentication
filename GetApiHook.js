@@ -1,18 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
-const getApiHook=(url)=>{
-    console.log(url)
-    const [data, setData] = useState(null);
 
-    useEffect(()=>{
-        axios.get(url).then((response) => {
-          console.log('is this Custom Hook Area ???');  
-          console.log(response.data.movies);
-          setData(response.data.movies);
-        });
-      },[])
-      return { data };
+
+const useApiData = (api) => {
+    const [data, setData] = useState([]);
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(api);
+            setData(response.data.movies);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+    return [data, fetchData];
 }
 
-export default getApiHook;
+export default useApiData;
